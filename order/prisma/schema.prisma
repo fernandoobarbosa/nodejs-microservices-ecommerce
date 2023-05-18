@@ -9,3 +9,43 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model Client {
+  id         String  @id @default(uuid())
+  externalId String
+  email      String  @unique
+  Order      Order[]
+
+  @@map("clients")
+}
+
+model Product {
+  id         String       @id @default(uuid())
+  externalId String
+  code       String
+  OrderItems OrderItems[]
+
+  @@map("products")
+}
+
+model Order {
+  id         String       @id @default(uuid())
+  client     Client       @relation(fields: [clientId], references: [id])
+  clientId   String
+  createdAt  DateTime     @default(now())
+  OrderItems OrderItems[]
+  status     String
+
+  @@map("orders")
+}
+
+model OrderItems {
+  id        String  @id @default(uuid())
+  product   Product @relation(fields: [productId], references: [id])
+  order     Order   @relation(fields: [orderId], references: [id])
+  quantity  Int
+  productId String
+  orderId   String
+
+  @@map("order_items")
+}
