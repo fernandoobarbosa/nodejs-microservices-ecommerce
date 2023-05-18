@@ -10,6 +10,7 @@ export class CreateClientController {
       const result = await useCase.execute(request.body);
       return response.status(201).json(result);
     } catch (err) {
+      console.error(err);
       return response.status(400).json(err);
     }
   }
